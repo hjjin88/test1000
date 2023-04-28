@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>동부건설 HTML 리스트</title>
+<style>
+	html,body {font:12px/1 '맑은 고딕'; color:#000;}
+	* {margin:0; padding:0; border:0; font:inherit; line-height:1; vertical-align:baseline; box-sizing:border-box;}
+	ul,li {list-style:none;}
+	button,a {cursor:pointer;} 
+	
+	.header {position:relative;}
+	h1 {padding:10px 30px; font-size:16px; color:#fff; background: linear-gradient(90deg, #33B9A5 0%, #40A7C9 69%, #5082E6 100%);}
+	.header .count {position:absolute; bottom:10px; right:30px; color:#fff;}
+	.menu-wrap {position:relative; padding:40px 10px 40px;}
+	.menu,
+	.menu table {width:100%;}
+	.menu>dt {position:absolute; top:10px;}
+	.menu>dt a {display:block; margin-top:2px; padding:8px 10px 7px; border:1px solid #5A9BD5; border-left-width:0; border-bottom:0; color:#5A9BD5; text-align:center; cursor:pointer;}
+	.menu>dt.viewAll+dt a {border-left-width:1px;}
+	.menu>dt.selected a {margin-top:0; padding:9px 10px; background:#5A9BD5; color:#fff; border-color:#5A9BD5;}
+	.menu>dt.viewAll {right:10px;}
+	.menu>dt.viewAll.selected {border-color:#000;}
+	.menu>dt.viewAll a {border-left:1px solid #5A9BD5;}
+	.menu>dd {display:block; padding:20px 0; border-top:1px solid #5A9BD5;}
+	.menu>dd>p:first-child {padding-bottom:5px;}
+	table {border-bottom:1px solid #ccc; border-collapse:collapse; border-spacing:0;}
+	th {padding:5px 0; color:#fff; background:#bbb; border-top:1px solid #fff; border-left:1px solid #fff; vertical-align:middle;}
+	td {padding:5px; border-top:1px solid #ccc; border-left:1px solid #ccc; vertical-align:middle; line-height:1.3;}
+	.hold td {background:#f9f9f9;}
+	.del td {background:#ccc; text-decoration:line-through;}
+	.del td * {text-decoration:line-through;}
+	.tbd td {background:#fffbd6;}
+	.selected td {color:#FF5F5F; background-color:rgba(255, 95, 95, .2);}
+	.btn {position:relative; display:inline-block; min-width:25px; height:15px; padding:0 5px; margin-left:3px; font-size:10px; line-height:13px; border-radius:3px; letter-spacing:-0.5px; color:#5A9BD5; background:#fff; vertical-align:middle; text-transform:uppercase; text-align: center;}
+	.btn:after {content:''; position:absolute; right:100%; top:3px; height:0; width:0; border:4px solid transparent; border-right-color:#fff;}
+	.tip {position:relative; display:inline-block; cursor:pointer;}
+	td a span,
+	.tip span {display:none; position:absolute; z-index:1; top:20px; left:50%; min-width:120px; margin-left:-60px; padding:3px; font-weight:normal; font-size:11px; background:#FF0; border-radius:3px; border:1px solid #F90; color:#000; line-height:17px;}
+	td a span:before,
+	.tip span:before {content:''; position:absolute; left:50%; top:-8px; height:0; width:0; border:4px solid transparent; border-bottom-color:#F90;}
+	tbody .tip span {width:200px; margin-left:-80px;}
+	tr.div td {border-top-width:2px; border-top-color:#000;}
+	progress {width:80px; height:15px; vertical-align:middle; background:#fff;}
+	progress::-webkit-progress-bar {background:rgba(21, 62, 153, 0.1);}
+	progress::-webkit-progress-value {background:#5A9BD5;}
+	.progress>div {position:relative; line-height:15px;}
+	.progress>div>span {float:left;}
+	.progress ul {float:right; width:50%;}
+	.progress li {display:flex;}
+	.progress li:first-child {padding-right:40px;}
+	.progress li:not(:first-child) {display:none;}
+	.progress li+li {margin-top:5px; padding-top:5px; border-top:1px solid #eee;}
+	.progress .date {width:40px; line-height:1.2; white-space:nowrap;}
+	.progress .history {overflow:hidden; width:calc(100% - 50px); white-space:nowrap; text-overflow:ellipsis; line-height:1.2;}
+	.progress .open .history {overflow:visible; white-space:normal;}
+	.progress .open li {display:flex;}
+	.progress .btn-history {position:absolute; top:0; right:0; height:15px; padding:0 3px; font-size:10px; border-radius:3px; text-align:center; line-height:15px;}
+	.progress .btn-history.up {background:red; color:#fff;}
+	.progress .btn-history.new {background:#2196f3; color:#fff;}
+	#toTop {display:none; position:fixed; left:0; bottom:0; right:0;}
+	#toTop a {display:block; padding:9px 10px; background:#000; color:#fff; text-align:center;}
+	.layer {display:none; position:fixed; top:50%; left:50%; width:414px; height:736px; background:#fff; box-shadow:0 0 20px 10px rgba(0, 0, 0, 0.2); transform:translate(-100%, -50%); transition:.2s;}
+	.layer button,
+	.layer .btns a {position:relative; float:left; padding:0 15px; height:30px; background:#fff; border:1px solid #ddd; box-sizing:border-box;}
+	.layer .btns a:before {content:''; display:inline-block; width:0; height:100%; vertical-align:middle;}
+	.layer button.on {z-index:1; color:red; border-color:red; outline:0;}
+	.layer .btns {position:absolute; top:-30px; left:0; width:100%; background:#fff;}
+	.layer .btns>*+* {margin-left:-1px;}
+	.layer .btns+button {position:absolute; top:-30px; right:0; background:#ccc; color:#fff; border-color:#ccc;}
+	.layer iframe {width:100%; height:100%; border:0;}
+	.making_guide {padding:10px; margin-bottom:10px;}
+	.making_guide dl {padding:10px; border:1px solid #ddd;}
+	.making_guide dt {margin-bottom:7px;}
+	.making_guide dd {line-height:1.5;}
+	.making_guide dd strong {font-weight:700;}
+	.making_guide dd+dd {margin-top:5px;}
+	td.id{text-align:center;}
+  p.tit{font-size: 20px;font-weight: 700;}
+	@media screen and (max-width:768px) {
+		.viewAll,.type,.id,.progress,.memo,.mo-hide,.count {display:none;}
+	}
+</style>
+</head>
+<body>
+<div>
+	<div class="header">
+		<h1>
+			<span>동부건설 HTML LIST</span>
+		</h1>
+		<div class="count">
+			전체페이지 <span class="btn"></span>
+			작업완료 <span class="btn"></span>
+			작업보류 <span class="btn"></span>
+			진행율 <span class="btn"></span>
+		</div>
+	</div>
+	<br>
+	<div class="making_guide">
+		<dl>
+			<dt>[작업 참고사항]</dt>
+			<dd>
+				<strong>*폴더 구조</strong> <br>
+				- html 폴더에 클래스=화면 ID로 네이밍 <br>
+				- css는 개인 작업 후 csm.css 추가<br>
+        - html 컨텐츠에 페이지 클래스 추가 후 작업
+			</dd>
+		</dl>
+	</div>
+	<div class="menu-wrap">
+		<dl class="menu">
+			<dt><a style="border-left-width: 1px;" class="viewAll selected">전체</a></dt>
+
+      <dt><a>가이드</a></dt>
+      <dd>
+        <table>
+          <colgroup class="mo-hide">
+            <col style="width: 200px">
+            <col style="width: 200px">
+            <col style="width: 200px">
+            <col style="width: 100px">
+            <col style="width: 80px">
+            <col style="width: 120px">
+            <col style="width: 150px">
+            <col style="width: 420px">
+            <col style="width: 350px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col" colspan="4">논리경로</th>
+              <th scope="col" rowspan="2" class="type">TYPE</th>
+              <th scope="col" rowspan="2" class="id">화면아이디</th>
+              <th scope="col" rowspan="2" class="link">링크</th>
+              <th scope="col" rowspan="2" class="progress">진행률/담당자/완료(수정)일/수정이력</th>
+              <th scope="col" rowspan="2" class="memo">메모</th>
+            </tr>
+            <tr>
+              <th scope="col">D1</th>
+              <th scope="col">D2</th>
+              <th scope="col">D3</th>
+              <th scope="col">D4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="guide">
+              <td class="d1">guide</td>
+              <td class="d2"></td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id"></td>
+              <td class="link"><a href="./DBCon2023Kr/html/guide.html" target="_blank">guide.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 작업자</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">03-22</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+          </tbody>
+        </table>
+      </dd>
+
+			<dt><a>******국문******</a></dt>
+			<dd>
+        <p class="tit">******국문******</p>
+				<table>
+					<colgroup class="mo-hide">
+						<col style="width:200px">
+						<col style="width:200px">
+						<col style="width:200px">
+						<col style="width:100px">
+						<col style="width:80px">
+						<col style="width:120px">
+						<col style="width:150px">
+						<col style="width:420px">
+						<col style="width:350px">
+					</colgroup>
+					<thead>
+						<tr>
+							<th scope="col" colspan="4">논리경로</th>
+							<th scope="col" rowspan="2" class="type">TYPE</th>
+							<th scope="col" rowspan="2" class="id">화면아이디</th>
+							<th scope="col" rowspan="2" class="link">링크</th>
+							<th scope="col" rowspan="2" class="progress">진행률/담당자/완료(수정)일/수정이력</th>
+							<th scope="col" rowspan="2" class="memo">메모</th>
+						</tr>
+						<tr>
+							<th scope="col">D1</th>
+							<th scope="col">D2</th>
+							<th scope="col">D3</th>
+							<th scope="col">D4</th>
+						</tr>
+					</thead>
+					<tbody>						
+            <tr data-folder="">
+              <td class="d1">1. ESG 경영</td>
+              <td class="d2">ESG 경영 개요</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">esg1</td>
+              <td class="link"><a href="./DBCon2023Kr/html/esg1.html" target="_blank">esg1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-13</span><span class="history">'ESG경영핵심과제'<br/>텍스트 수정완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+						<tr data-folder="">
+							<td class="d1"></td>
+							<td class="d2">중대성 평가</td>
+							<td class="d3"></td>
+							<td class="d4"></td>
+							<td class="type"></td>
+							<td class="id">esg2</td>
+							<td class="link"><a href="./DBCon2023Kr/html/esg2.html" target="_blank">esg2.html</a></td>
+							<td class="progress">
+								<div>
+									<span><progress value="100" max="100"></progress> 진현주</span>
+									<!-- 최신수정이력을 맨위로 가게 작성 -->
+									<ul class="history-list">
+										<li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                    <li><span class="date">04-19</span><span class="history">'주요 이슈별 리스크 <br/>및 기회요인 분석'<br/>텍스트 수정완료</span></li>
+									</ul>
+								</div>
+							</td>
+							<td class="memo">'주요 이슈별 리스크 및 기회요인 분석' 고객사 사이즈 대응 확인 후 수정 진행</td>
+						</tr>
+						<tr data-folder="">
+							<td class="d1"></td>
+							<td class="d2">조직도 및 주요 업무</td>
+							<td class="d3"></td>
+							<td class="d4"></td>
+							<td class="type"></td>
+							<td class="id">esg3</td>
+							<td class="link"><a href="./DBCon2023Kr/html/esg3.html" target="_blank">esg3.html</a></td>
+							<td class="progress">
+								<div>
+									<span><progress value="100" max="100"></progress> 진현주</span>
+									<!-- 최신수정이력을 맨위로 가게 작성 -->
+									<ul class="history-list">
+										<li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+									</ul>
+								</div>
+							</td>
+							<td class="memo"></td>
+						</tr>            
+            <tr data-folder="">
+              <td class="d1">2. Governance</td>
+              <td class="d2">이사회 역할과 책임</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov1</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov1.html" target="_blank">gov1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-13</span><span class="history">'이사회 구성'<br/>제목 텍스트 수정완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">텍스트 줄바꿈 수정완료</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">이사회 구성 및 운영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov2</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov2.html" target="_blank">gov2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-13</span><span class="history">'ESG위원회 운영' <br/>텍스트 수정완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">윤리경영, 준법경영</td>
+              <td class="d3">윤리경영 실천지침</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_1</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov3_1.html" target="_blank">gov3_1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">임직원 행동지침</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_2</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov3_2.html" target="_blank">gov3_2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                    <li><span class="date">04-20</span><span class="history">텍스트 줄바꿈 및<br/>가나다 리스트 여백 <br/>수정완료</li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">부패방지경영시스템</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_3</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov3_3.html" target="_blank">gov3_3.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">윤리경영 FAQ</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_4</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov3_4.html" target="_blank">gov3_4.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">준법경영</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_5</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov3_5.html" target="_blank">gov3_5.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">사이버 신문고</td>
+              <td class="d3">사이버신문고 안내</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_1</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov4_1.html" target="_blank">gov4_1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">감사팀 소개</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_2</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov4_2.html" target="_blank">gov4_2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">제보자 보호제도</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_3</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov4_3.html" target="_blank">gov4_3.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">제보하기</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_4</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov4_4.html" target="_blank">gov4_4.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>            
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">제보결과 확인</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_5</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov4_5.html" target="_blank">gov4_5.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">주주권리 보호</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov5</td>
+              <td class="link"><a href="./DBCon2023Kr/html/gov5.html" target="_blank">gov5.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-18</span><span class="history">폰트수정완료</span></li>
+                    <li><span class="date">04-19</span><span class="history">이중테이블 수정</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1">3. Environmental</td>
+              <td class="d2">환경경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">env1</td>
+              <td class="link"><a href="./DBCon2023Kr/html/env1.html" target="_blank">env1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 이진희, 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                    <li><span class="date">04-19</span><span class="history">'환경 이슈 대응'/'건설 폐기물 업무처리 흐름도' PC이미지 수정</span></li>
+                    <li><span class="date">04-20</span><span class="history">'환경경영시스템 인증현황''dot' 추가 수정 완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">기후변화 대응</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">env2</td>
+              <td class="link"><a href="./DBCon2023Kr/html/env2.html" target="_blank">env2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 이진희, 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">환경경영 실적</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">env3</td>
+              <td class="link"><a href="./DBCon2023Kr/html/env3.html" target="_blank">env3.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 이진희, 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                    <li><span class="date">04-19</span><span class="history">이중테이블 수정 완료</span></li>
+                    <li><span class="date">04-20</span><span class="history">이중테이블 재수정 완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1">4. Social</td>
+              <td class="d2">안전보건경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc1</td>
+              <td class="link"><a href="./DBCon2023Kr/html/soc1.html" target="_blank">soc1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 이진희, 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">상생경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc2</td>
+              <td class="link"><a href="./DBCon2023Kr/html/soc2.html" target="_blank">soc2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 이진희, 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-07</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">나눔경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc3</td>
+              <td class="link"><a href="./DBCon2023Kr/html/soc3.html" target="_blank">soc3.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 이진희, 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-10</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">품질경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc4</td>
+              <td class="link"><a href="./DBCon2023Kr/html/soc4.html" target="_blank">soc4.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-10</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">인권경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc5</td>
+              <td class="link"><a href="./DBCon2023Kr/html/soc5.html" target="_blank">soc5.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-10</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">구성원 행복</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc6</td>
+              <td class="link"><a href="./DBCon2023Kr/html/soc6.html" target="_blank">soc6.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="100" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">04-11</span><span class="history">최초완료</span></li>
+                    <li><span class="date">04-17</span><span class="history">폰트수정완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+					</tbody>
+				</table>
+			</dd>
+
+      <dt><a>******영문******</a></dt>
+      <dd>
+        <p class="tit">******영문******</p>
+        <table>
+          <colgroup class="mo-hide">
+            <col style="width:200px">
+            <col style="width:200px">
+            <col style="width:200px">
+            <col style="width:100px">
+            <col style="width:80px">
+            <col style="width:120px">
+            <col style="width:150px">
+            <col style="width:420px">
+            <col style="width:350px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col" colspan="4">논리경로</th>
+              <th scope="col" rowspan="2" class="type">TYPE</th>
+              <th scope="col" rowspan="2" class="id">화면아이디</th>
+              <th scope="col" rowspan="2" class="link">링크</th>
+              <th scope="col" rowspan="2" class="progress">진행률/담당자/완료(수정)일/수정이력</th>
+              <th scope="col" rowspan="2" class="memo">메모</th>
+            </tr>
+            <tr>
+              <th scope="col">D1</th>
+              <th scope="col">D2</th>
+              <th scope="col">D3</th>
+              <th scope="col">D4</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-folder="">
+              <td class="d1">1. ESG 경영</td>
+              <td class="d2">ESG 경영 개요</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">esg1</td>
+              <td class="link"><a href="./DBCon2023En/html/esg1.html" target="_blank">esg1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">중대성 평가</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">esg2</td>
+              <td class="link"><a href="./DBCon2023En/html/esg2.html" target="_blank">esg2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">조직도 및 주요 업무</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">esg3</td>
+              <td class="link"><a href="./DBCon2023En/html/esg3.html" target="_blank">esg3.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1">2. Governance</td>
+              <td class="d2">이사회 역할과 책임</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov1</td>
+              <td class="link"><a href="./DBCon2023En/html/gov1.html" target="_blank">gov1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">이사회 구성 및 운영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov2</td>
+              <td class="link"><a href="./DBCon2023En/html/gov2.html" target="_blank">gov2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">윤리경영, 준법경영</td>
+              <td class="d3">윤리경영 실천지침</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_1</td>
+              <td class="link"><a href="./DBCon2023En/html/gov3_1.html" target="_blank">gov3_1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">임직원 행동지침</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_2</td>
+              <td class="link"><a href="./DBCon2023En/html/gov3_2.html" target="_blank">gov3_2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">부패방지경영시스템</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_3</td>
+              <td class="link"><a href="./DBCon2023En/html/gov3_3.html" target="_blank">gov3_3.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">윤리경영 FAQ</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_4</td>
+              <td class="link"><a href="./DBCon2023En/html/gov3_4.html" target="_blank">gov3_4.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">준법경영</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov3_5</td>
+              <td class="link"><a href="./DBCon2023En/html/gov3_5.html" target="_blank">gov3_5.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">사이버 신문고</td>
+              <td class="d3">사이버신문고 안내</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_1</td>
+              <td class="link"><a href="./DBCon2023En/html/gov4_1.html" target="_blank">gov4_1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">감사팀 소개</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_2</td>
+              <td class="link"><a href="./DBCon2023En/html/gov4_2.html" target="_blank">gov4_2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">제보자 보호제도</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_3</td>
+              <td class="link"><a href="./DBCon2023En/html/gov4_3.html" target="_blank">gov4_3.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">제보하기</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_4</td>
+              <td class="link"><a href="./DBCon2023En/html/gov4_4.html" target="_blank">gov4_4.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>            
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2"></td>
+              <td class="d3">제보결과 확인</td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov4_5</td>
+              <td class="link"><a href="./DBCon2023En/html/gov4_5.html" target="_blank">gov4_5.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">주주권리 보호</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">gov5</td>
+              <td class="link"><a href="./DBCon2023En/html/gov5.html" target="_blank">gov5.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 진현주</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1">3. Environment</td>
+              <td class="d2">환경경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">env1</td>
+              <td class="link"><a href="/./DBCon2023Kr./DBCon2023En/html/env1.html" target="_blank">env1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 이진희</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">기후변화 대응</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">env2</td>
+              <td class="link"><a href="./DBCon2023En/html/env2.html" target="_blank">env2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 이진희</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">환경경영 실적</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">env3</td>
+              <td class="link"><a href="./DBCon2023En/html/env3.html" target="_blank">env3.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 이진희</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1">4. Social</td>
+              <td class="d2">안전보건경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc1</td>
+              <td class="link"><a href="./DBCon2023En/html/soc1.html" target="_blank">soc1.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 이진희</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">상생경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc2</td>
+              <td class="link"><a href="./DBCon2023En/html/soc2.html" target="_blank">soc2.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 이진희</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">나눔경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc3</td>
+              <td class="link"><a href="./DBCon2023En/html/soc3.html" target="_blank">soc3.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 이진희</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">품질경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc4</td>
+              <td class="link"><a href="./DBCon2023En/html/soc4.html" target="_blank">soc4.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 이진희</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">인권경영</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc5</td>
+              <td class="link"><a href="./DBCon2023En/html/soc5.html" target="_blank">soc5.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 이진희</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+            <tr data-folder="">
+              <td class="d1"></td>
+              <td class="d2">구성원 행복</td>
+              <td class="d3"></td>
+              <td class="d4"></td>
+              <td class="type"></td>
+              <td class="id">soc6</td>
+              <td class="link"><a href="./DBCon2023En/html/soc6.html" target="_blank">soc6.html</a></td>
+              <td class="progress">
+                <div>
+                  <span><progress value="0" max="100"></progress> 이진희</span>
+                  <!-- 최신수정이력을 맨위로 가게 작성 -->
+                  <ul class="history-list">
+                    <li><span class="date">00-00</span><span class="history">최초완료</span></li>
+                  </ul>
+                </div>
+              </td>
+              <td class="memo"></td>
+            </tr>
+          </tbody>
+        </table>
+      </dd>
+		</dl>
+	</div>
+</div>
+
+<script src="./DBCon2023Kr/js/vendor/jquery-1.11.0.min.js"></script>
+<script>
+	$(function() {
+		$('a').click(function(e) {
+			if ($(this).attr('href') === '#none') {
+				e.preventDefault();
+			}
+		});
+
+		// --total
+		var $ele = $('tr:not(.del, .guide) progress');
+		var $tbd = $('tr.tbd progress');
+		var $comp = $('tr:not(.del, .guide) progress[value=100]');
+		var total = $ele.length;
+		var complete = $comp.length;
+		var tbd = $tbd.length;
+		var per = (complete / total * 100).toFixed(1);
+
+		console.log(total);
+
+		$('.count span').eq(0).text(total + 'p');
+		$('.count span').eq(1).text(complete + 'p');
+		$('.count span').eq(2).text(tbd + 'p');
+		$('.count span').eq(3).text(per + '%');
+		// --total end
+
+		$('.tbd td').attr('title', '보류');
+		$('.del td').attr('title', '삭제');
+
+		// tab menu
+		var tm = $('.menu>dt');
+		var tc = $('.menu>dd');
+		var btnAll = $('.viewAll');
+		var menu = tm.not(btnAll);
+
+		$('.menu>dt.selected').next('dd').show();
+		btnAll.click(function() {
+			tm.not($(this).addClass('selected')).removeClass('selected');
+			tc.show();
+		});
+		menu.click(function() {
+			tm.not($(this).addClass('selected')).removeClass('selected');
+			$(this).next('dd').show().siblings('dd').hide();
+		});
+		menu.not(menu.eq(0)).each(function() {
+			var tmw = $(this).prevAll('dt').width();
+			var tml = $(this).prevAll('dt').position().left;
+			var tmp = tml + tmw;
+			$(this).css('left', tmp);
+		});
+
+		//link
+		// $('.link').each(function(){
+		// 	var $this = $(this);
+		// 	var scId = $this.prev('.id').text();
+		// 	var folder = $this.parent().data('folder');
+		// 	var _a = $this.find('a');
+		// 	if( !scId == ''){
+		// 		_a.text(scId + '.html');
+		// 		_a.attr('href', 'html/' + folder + '/' + scId + '.html');
+		// 	}
+
+		// 	_a.on('click', function(){
+		// 		$('tr').not($(this).parents('tr').addClass('selected')).removeClass('selected');
+		// 	});
+		// });
+
+		// history
+		var $hislist = $('.history-list');
+		var now = new Date();
+		var month = (now.getMonth() + 1) > 9 ? '' + (now.getMonth() + 1) : '0' + (now.getMonth() + 1);
+		var day = now.getDate() > 9 ? '' + now.getDate() : '0' + now.getDate();
+		var today = month + '-' + day;
+
+		$hislist.each(function() {
+			var nodes = $(this).children();
+			var upday = $(this).find('li:first-child').find('.date').text().slice(0, 5);
+
+			if (nodes.length > 1) {
+				$('<button type="button" class="btn-history" />').appendTo($(this).parent('div')).text('수정이력');
+
+				if (upday == today) {
+					$(this).siblings('.btn-history').addClass('up').text('UPDATE');
+				}
+			}else if(nodes.length == 1 && upday == today){
+				$('<span class="btn-history new" />').appendTo($(this).parent('div')).text('NEW');
+			}
+		});
+
+		var $btnHis = $('.btn-history');
+		$btnHis.on('click', function() {
+			$(this).siblings('ul').toggleClass('open');
+		});
+
+
+		// to top
+		var scrollDiv = document.createElement('div');
+		$(scrollDiv).attr('id', 'toTop').html('<a href="#none">↑ 처음으로 이동</a>').appendTo('body');
+		$(window).scroll(function() {
+			if ($(this).scrollTop() !== 0) {
+				$('#toTop').fadeIn();
+			} else {
+				$('#toTop').fadeOut();
+			}
+		});
+		$('#toTop').click(function() {
+			$('body,html').animate({
+				scrollTop: 0
+			}, 600);
+		});
+
+	});
+</script>
+</body>
+</html>
